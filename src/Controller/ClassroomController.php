@@ -15,7 +15,7 @@ class ClassroomController extends AbstractFOSRestController
     /**
      * @Rest\Get("/classrooms")
      */
-    public function getcClassroomAction()
+    public function cgetAction()
     {
         $repository = $this->getDoctrine()->getRepository(Classroom::class);
         $classrooms = $repository->findall();
@@ -25,7 +25,7 @@ class ClassroomController extends AbstractFOSRestController
     /**
      * @Rest\Get("/classrooms/{id}")
      */
-    public function getClassroomAction(Classroom $classroom)
+    public function getAction(Classroom $classroom)
     {
         return $this->view($classroom);
     }
@@ -33,7 +33,7 @@ class ClassroomController extends AbstractFOSRestController
     /**
      * @Rest\Post("/classrooms")
      */
-    public function newClassroomAction(Request $request, ValidatorInterface $validator)
+    public function postAction(Request $request, ValidatorInterface $validator)
     {
         $classroom = new Classroom();
         $form = $this->createForm(ClassroomType::class, $classroom);
@@ -53,7 +53,7 @@ class ClassroomController extends AbstractFOSRestController
     /**
      * @Rest\Delete("/classrooms/{id}")
      */
-    public function deleteClassroomAction(Classroom $classroom) {
+    public function deleteAction(Classroom $classroom) {
         $em = $this->getDoctrine()->getManager();
         $em->remove($classroom);
         $em->flush();
@@ -63,7 +63,7 @@ class ClassroomController extends AbstractFOSRestController
     /**
      * @Rest\Patch("/classrooms/{id}")
      */
-    public function patchClassroomAction(Classroom $classroom, Request $request, ValidatorInterface $validator) {
+    public function patchAction(Classroom $classroom, Request $request, ValidatorInterface $validator) {
         $data = json_decode($request->getContent(), true);
         if (isset($data['year'])) {
             $classroom->setYear($data['year']);

@@ -15,7 +15,7 @@ class StudentController extends AbstractFOSRestController
     /**
      * @Rest\Get("/students")
      */
-    public function getcStudentAction()
+    public function cgetAction()
     {
         $studentRepository = $this->getDoctrine()->getRepository(Student::class);
         return $this->view($studentRepository->findAll());
@@ -24,7 +24,7 @@ class StudentController extends AbstractFOSRestController
     /**
      * @Rest\Get("/students/{id}")
      */
-    public function getStudentAction(Student $student)
+    public function getAction(Student $student)
     {
         return $this->view($student);
     }
@@ -32,7 +32,7 @@ class StudentController extends AbstractFOSRestController
     /**
      * @Rest\Post("/students")
      */
-    public function newStudentAction(Request $request, ValidatorInterface $validator)
+    public function postAction(Request $request, ValidatorInterface $validator)
     {
         $student = new Student();
         $form = $this->createForm(StudentType::class, $student);
@@ -52,7 +52,7 @@ class StudentController extends AbstractFOSRestController
     /**
      * @Rest\Delete("/students/{id}")
      */
-    public function deleteStudentAction(Student $student)
+    public function deleteAction(Student $student)
     {
         $em = $this->getDoctrine()->getManager();
         $em->remove($student);
@@ -63,7 +63,7 @@ class StudentController extends AbstractFOSRestController
     /**
      * @Rest\Patch("/students/{id}")
      */
-    public function patchStudentAction(Student $student, Request $request, ValidatorInterface $validator) {
+    public function patchAction(Student $student, Request $request, ValidatorInterface $validator) {
         $data = json_decode($request->getContent(), true);
         if (isset($data['name'])) {
             $student->setName($data['name']);
@@ -91,7 +91,7 @@ class StudentController extends AbstractFOSRestController
     /**
      * @Rest\Put("/students/{id}")
      */
-    public function putStudentAction(Student $student, Request $request, ValidatorInterface $validator) {
+    public function putAction(Student $student, Request $request, ValidatorInterface $validator) {
         $data = json_decode($request->getContent(), true);
         $student->setName(isset($data['name']) ? $data['name'] : null);
         $student->setSurname(isset($data['surname']) ? $data['surname'] : null);
