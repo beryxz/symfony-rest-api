@@ -19,12 +19,12 @@ class Student
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $surname;
 
@@ -34,7 +34,7 @@ class Student
     private $sidi_code;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $tax_code;
 
@@ -48,7 +48,7 @@ class Student
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -60,7 +60,7 @@ class Student
         return $this->surname;
     }
 
-    public function setSurname(string $surname): self
+    public function setSurname(?string $surname): self
     {
         $this->surname = $surname;
 
@@ -84,7 +84,7 @@ class Student
         return $this->tax_code;
     }
 
-    public function setTaxCode(string $tax_code): self
+    public function setTaxCode(?string $tax_code): self
     {
         $this->tax_code = $tax_code;
 

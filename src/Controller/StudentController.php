@@ -59,4 +59,54 @@ class StudentController extends AbstractFOSRestController
         $em->flush();
         return $this->view($student, Response::HTTP_OK);
     }
+
+    /**
+     * @Rest\Patch("/students/{id}")
+     */
+    public function patchStudentAction(Student $student, Request $request, ValidatorInterface $validator) {
+        $data = json_decode($request->getContent(), true);
+        if (isset($data['name'])) {
+            $student->setName($data['name']);
+        }
+        if (isset($data['surname'])) {
+            $student->setSurname($data['surname']);
+        }
+        if (isset($data['sidi_code'])) {
+            $student->setSidiCode($data['sidi_code']);
+        }
+        if (isset($data['tax_code'])) {
+            $student->setTaxCode($data['tax_code']);
+        }
+
+        $errors = $validator->validate($student);
+        if (count($errors) > 0) {
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+        return $this->view($student, Response::HTTP_OK);
+    }
+
+    /**
+     * @Rest\Put("/students/{id}")
+     */
+    public function putStudentAction(Student $student, Request $request, ValidatorInterface $validator) {
+        $data = json_decode($request->getContent(), true);
+        $student->setName(isset($data['name']) ? $data['name'] : null);
+        $student->setSurname(isset($data['surname']) ? $data['surname'] : null);
+        if (isset($data['sidi_code'])) {
+            $student->setSidiCode($data['sidi_code']);
+        }
+        $student->setTaxCode(isset($data['tax_code']) ? $data['tax_code'] : null);
+
+        $errors = $validator->validate($student);
+        if (count($errors) > 0) {
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+        return $this->view($student, Response::HTTP_OK);
+    }
 }

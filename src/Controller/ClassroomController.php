@@ -59,4 +59,26 @@ class ClassroomController extends AbstractFOSRestController
         $em->flush();
         return $this->view($classroom, Response::HTTP_OK);
     }
+
+    /**
+     * @Rest\Patch("/classrooms/{id}")
+     */
+    public function patchClassroomAction(Classroom $classroom, Request $request, ValidatorInterface $validator) {
+        $data = json_decode($request->getContent(), true);
+        if (isset($data['year'])) {
+            $classroom->setYear($data['year']);
+        }
+        if (isset($data['section'])) {
+            $classroom->setSection($data['section']);
+        }
+
+        $errors = $validator->validate($classroom);
+        if (count($errors) > 0) {
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+        return $this->view($classroom, Response::HTTP_OK);
+    }
 }
