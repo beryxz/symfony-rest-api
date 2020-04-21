@@ -8,6 +8,7 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ClassroomController extends AbstractFOSRestController
 {
@@ -32,19 +33,21 @@ class ClassroomController extends AbstractFOSRestController
     /**
      * @Rest\Post("/classrooms")
      */
-    public function newClassroomAction(Request $request)
+    public function newClassroomAction(Request $request, ValidatorInterface $validator)
     {
         $classroom = new Classroom();
         $form = $this->createForm(ClassroomType::class, $classroom);
-        $data = json_decode($request->getContent(), true);
-        $form->submit($data);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($classroom);
-            $em->flush();
-            return $this->view($classroom, Response::HTTP_CREATED);
+        $form->submit(json_decode($request->getContent(), true));
+
+        $errors = $validator->validate($classroom);
+        if (count($errors) > 0) {
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
-        return $this->view($form->getErrors());
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($classroom);
+        $em->flush();
+        return $this->view($classroom, Response::HTTP_CREATED);
     }
 
     /**

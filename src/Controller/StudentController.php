@@ -6,10 +6,9 @@ use App\Entity\Student;
 use App\Form\StudentType;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Test\Constraint\ResponseStatusCodeSame;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class StudentController extends AbstractFOSRestController
 {
@@ -33,20 +32,21 @@ class StudentController extends AbstractFOSRestController
     /**
      * @Rest\Post("/students")
      */
-    public function newStudentAction(Request $request)
+    public function newStudentAction(Request $request, ValidatorInterface $validator)
     {
-        //TODO Errorr not catched when sidi_code is alredy existant
         $student = new Student();
         $form = $this->createForm(StudentType::class, $student);
-        $data = json_decode($request->getContent(), true);
-        $form->submit($data);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($student);
-            $em->flush();
-            return $this->view($student, Response::HTTP_CREATED);
+        $form->submit(json_decode($request->getContent(), true));
+
+        $errors = $validator->validate($student);
+        if (count($errors) > 0) {
+            return $this->view($errors, Response::HTTP_BAD_REQUEST);
         }
-        return $this->view($form->getErrors());
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($student);
+        $em->flush();
+        return $this->view($student, Response::HTTP_CREATED);
     }
 
     /**
