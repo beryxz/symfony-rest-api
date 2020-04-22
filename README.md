@@ -11,8 +11,14 @@ This project uses Symfony 4.4 with FOSRestBundle
 
 ### DB
 
+By default the project is set to use sqlite (`.env`)
+
+- Run `php bin/console doctrine:database:create` # Create databse
+- Run `php bin/console doctrine:schema:update --force` # Updates schema
+
+To change the database
+
 - Set `DATABASE_URL` in `.env.local`
-- Run `php bin/console doctrine:database:create`
 
 ## Test
 
